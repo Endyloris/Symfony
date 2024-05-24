@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Commander le Plat{% endblock %}
+
+{% block body %}
+<h1>Commander le Plat</h1>
+
+<div class="card mb-4 shadow-sm">
+    <img src="{{ asset(plat.image) }}" class="card-img-top" alt="{{ plat.libelle }}">
+    <div class="card-body">
+        <h5 class="card-title">{{ plat.libelle }}</h5>
+        <p class="card-text">{{ plat.description }}</p>
+        <p class="card-text"><strong>{{ plat.prix }} €</strong></p>
+        <form method="post" action="{{ path('commande_process', {'id': plat.id}) }}">
+            <button type="submit" class="btn btn-primary">Confirmer la commande</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

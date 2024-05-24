@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Catalogue des Plats{% endblock %}
+
+{% block body %}
+<h1>Catalogue des Plats</h1>
+
+<div class="row">
+    {% for plat in plats %}
+        <div class="col-md-4">
+            <div class="card mb-4 shadow-sm">
+                <img src="{{ asset(plat.image) }}" class="card-img-top" alt="{{ plat.libelle }}">
+                <div class="card-body">
+                    <h5 class="card-title">{{ plat.libelle }}</h5>
+                    <p class="card-text">{{ plat.description }}</p>
+                    <p class="card-text"><strong>{{ plat.prix }} €</strong></p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="btn-group">
+                            <a href="{{ path('commande_index', {'id': plat.id}) }}" class="btn btn-sm btn-outline-secondary">Commander</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}

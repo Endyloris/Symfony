@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Confirmation de la Commande{% endblock %}
+
+{% block body %}
+<h1>Confirmation de la Commande</h1>
+
+<p>Merci pour votre commande ! Voici les détails :</p>
+
+<div class="card mb-4 shadow-sm">
+    <img src="{{ asset(commande.plat.image) }}" class="card-img-top" alt="{{ commande.plat.libelle }}">
+    <div class="card-body">
+        <h5 class="card-title">{{ commande.plat.libelle }}</h5>
+        <p class="card-text">{{ commande.plat.description }}</p>
+        <p class="card-text"><strong>{{ commande.total }} €</strong></p>
+    </div>
+</div>
+{% endblock %}

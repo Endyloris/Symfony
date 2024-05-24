@@ -1,0 +1,55 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Accueil{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <div class="jumbotron text-center">
+        <h1 class="display-4">Bienvenue chez Notre Restaurant en Ligne</h1>
+        <p class="lead">Dégustez les meilleurs plats directement chez vous.</p>
+        <hr class="my-4">
+        <form method="get" action="{{ path('catalogue_home') }}" class="form-inline justify-content-center">
+            <input class="form-control mr-sm-2" type="search" name="search" placeholder="Rechercher un plat" aria-label="Search" value="{{ search }}">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Rechercher</button>
+        </form>
+    </div>
+
+    <div class="video mt-5 text-center">
+        <h2>Notre Histoire</h2>
+        <video controls width="80%">
+            <source src="{{ asset('videos/coverr-over-the-shoulder-shot-of-barista-putting-pastry-on-the-display-1963-1080p.mp4') }}" type="video/mp4">
+            Votre navigateur ne supporte pas les vidéos HTML5.
+        </video>
+    </div>
+
+    <div class="presentation mt-5">
+        <h2>Présentation</h2>
+        <p>
+            Bienvenue sur notre site de restauration en ligne. Nous vous proposons une large gamme de plats savoureux préparés avec des ingrédients frais et de qualité. Que vous ayez envie de plats traditionnels ou de quelque chose d'un peu plus exotique, nous avons quelque chose pour tout le monde.
+        </p>
+        <p>
+            Notre mission est de vous offrir une expérience culinaire exceptionnelle sans que vous ayez à quitter le confort de votre maison. Parcourez notre menu, passez votre commande en ligne, et laissez-nous nous occuper du reste !
+        </p>
+    </div>
+
+    {% if plats is not empty %}
+    <div class="search-results mt-5">
+        <h2>Résultats de recherche</h2>
+        <div class="row">
+            {% for plat in plats %}
+            <div class="col-md-4">
+                <div class="card mb-4">
+                    <img src="{{ asset(plat.image) }}" class="card-img-top" alt="{{ plat.libelle }}">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ plat.libelle }}</h5>
+                        <p class="card-text">{{ plat.description }}</p>
+                        <p class="card-text"><strong>{{ plat.prix }} €</strong></p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
