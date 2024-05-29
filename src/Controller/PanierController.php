@@ -1,10 +1,9 @@
 <?php
 
-// src/Controller/PanierController.php
-
 namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -48,7 +47,35 @@ class PanierController extends AbstractController
         }
 
         return $this->render('panier/index.html.twig', [
-            'panier' => $panierData
+            'panier' => $panierData,
         ]);
+    }
+
+    #[Route('/panier/modifier/{id}', name: 'panier_modifier', methods: ['POST'])]
+    public function modifier(int $id, Request $request, SessionInterface $session): Response
+    {
+        $quantite = $request->request->get('quantite');
+
+        if ($quantite <= 0) {
+            // Supprimer le plat du panier s'il n'y a pas de quantité
+            $this->supprimer($id, $session);
+        } else {
+            // Mettre à jour la quantité du plat dans le panier
+            $panier = $session->get('panier', []);
+            $panier[$id] = $quantite;
+            $session->set('panier', $panier);
+        }
+
+        return $this->redirectToRoute('panier_contenu');
+    }
+
+    #[Route('/panier/supprimer/{id}', name: 'panier_supprimer', methods: ['POST'])]
+    public function supprimer(int $id, SessionInterface $session): Response
+    {
+        $panier = $session->get('panier', []);
+        unset($panier[$id]);
+        $session->set('panier', $panier);
+
+        return $this->redirectToRoute('panier_contenu');
     }
 }

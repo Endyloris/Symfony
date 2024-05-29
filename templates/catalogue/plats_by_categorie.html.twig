@@ -14,9 +14,13 @@
                 <h5 class="card-title">{{ plat.libelle }}</h5>
                 <p class="card-text">{{ plat.description }}</p>
                 <p class="card-text"><strong>{{ plat.prix }} €</strong></p>
-                <form method="post" action="{{ path('commande_process', {'id': plat.id}) }}">
-                    <button type="submit" class="btn btn-primary">Commander</button>
-                </form>
+                {% if is_granted('ROLE_USER') %}
+                    <form method="post" action="{{ path('panier_ajout', {'id': plat.id}) }}">
+                        <button type="submit" class="btn btn-primary">Ajouter au panier</button>
+                    </form>
+                {% else %}
+                    <p>Connectez-vous pour ajouter au panier et commander.</p>
+                {% endif %}
             </div>
         </div>
     </div>

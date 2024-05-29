@@ -3,6 +3,9 @@
 namespace App\Repository;
 
 use App\Entity\Commande;
+use App\Entity\Plat; // Ajoutez cette ligne
+use App\Entity\Utilisateur; // Ajoutez cette ligne
+
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -19,6 +22,25 @@ class CommandeRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Commande::class);
+    }
+
+    public function processCommande(int $platId, int $userId): Commande
+    {
+        $entityManager = $this->getEntityManager();
+        $plat = $entityManager->getReference(Plat::class, $platId);
+        $user = $entityManager->getReference(Utilisateur::class, $userId);
+
+        $commande = new Commande();
+        $commande->setDateCommande(new \DateTime())
+                 ->setTotal($plat->getPrix())
+                 ->setEtat(0)
+                 ->setUtilisateur($user)
+                 ->addPlat($plat);
+
+        $entityManager->persist($commande);
+        $entityManager->flush();
+
+        return $commande;
     }
 
 //    /**

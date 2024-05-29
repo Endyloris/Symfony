@@ -13,12 +13,15 @@ security:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
+
         main:
             lazy: true
             provider: app_user_provider
             entry_point: App\Security\IdentificationAuthenticator
             
-            
+            form_login:
+                check_path: app_login
+                login_path: app_login
 
             logout:
                 path: app_logout

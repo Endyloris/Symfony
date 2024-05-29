@@ -10,3 +10,32 @@ app_login:
 
 app_login_check:
     path: /login_check
+
+valider_commande:
+    path: '/valider-commande/{id}'
+    controller: App\Controller\CommandeController::validerCommande
+
+process_commande:
+    path: '/process-commande/{id}'
+    controller: App\Controller\CommandeController::processCommande
+    methods: ['POST']
+
+    # config/routes.yaml
+panier:
+    path: '/panier'
+    controller: App\Controller\PanierController::contenu
+
+panier_ajout:
+    path: '/panier/ajout/{id}'
+    controller: App\Controller\PanierController::ajout
+    methods: ['POST']
+
+panier_modifier:
+    path: '/panier/modifier/{id}'
+    controller: App\Controller\PanierController::modifier
+    methods: ['POST']
+
+panier_supprimer:
+    path: '/panier/supprimer/{id}'
+    controller: App\Controller\PanierController::supprimer
+    methods: ['POST']

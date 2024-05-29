@@ -7,12 +7,14 @@
 
 <p>Merci pour votre commande ! Voici les détails :</p>
 
+{% for plat in commande.plats %}
 <div class="card mb-4 shadow-sm">
-    <img src="{{ asset(commande.plat.image) }}" class="card-img-top" alt="{{ commande.plat.libelle }}">
+    <img src="{{ asset(plat.image) }}" class="card-img-top" alt="{{ plat.libelle }}">
     <div class="card-body">
-        <h5 class="card-title">{{ commande.plat.libelle }}</h5>
-        <p class="card-text">{{ commande.plat.description }}</p>
-        <p class="card-text"><strong>{{ commande.total }} €</strong></p>
+        <h5 class="card-title">{{ plat.libelle }}</h5>
+        <p class="card-text">{{ plat.description }}</p>
+        <p class="card-text"><strong>{{ plat.prix }} €</strong></p>
     </div>
 </div>
+{% endfor %}
 {% endblock %}

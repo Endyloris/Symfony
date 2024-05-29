@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\Request;
 use App\Repository\PlatRepository;
 use App\Entity\Commande;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Repository\CommandeRepository;
 
 class CommandeController extends AbstractController
 {
@@ -27,7 +28,7 @@ class CommandeController extends AbstractController
     }
 
     #[Route('/commande/process/{id}', name: 'commande_process', methods: ['POST'])]
-    public function process(int $id, PlatRepository $platRepository, EntityManagerInterface $entityManager): Response
+    public function process(int $id, PlatRepository $platRepository, CommandeRepository $commandeRepository): Response
     {
         $plat = $platRepository->find($id);
 
@@ -35,15 +36,14 @@ class CommandeController extends AbstractController
             throw $this->createNotFoundException('Le plat n\'existe pas.');
         }
 
-        $commande = new Commande();
-        $commande->setDateCommande(new \DateTime())
-                 ->setTotal($plat->getPrix())
-                 ->setEtat(0) // Par exemple, 0 pour "Enregistré"
-                 ->setUtilisateur($this->getUser()) // Assurez-vous que l'utilisateur est connecté
-                 ->addPlat($plat);
+        $user = $this->getUser();
+        $userId = $user ? $user->getId() : null;
 
-        $entityManager->persist($commande);
-        $entityManager->flush();
+        if (!$userId) {
+            throw $this->createNotFoundException('Utilisateur non trouvé.');
+        }
+
+        $commande = $commandeRepository->processCommande($plat->getId(), $userId);
 
         return $this->redirectToRoute('commande_confirmation', ['id' => $commande->getId()]);
     }

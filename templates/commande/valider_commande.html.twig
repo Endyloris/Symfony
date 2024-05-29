@@ -1,0 +1,20 @@
+{# templates/commande/valider_commande.html.twig #}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Valider la Commande{% endblock %}
+
+{% block body %}
+<h1>Valider la Commande</h1>
+
+<div>
+    <h2>{{ plat.libelle }}</h2>
+    <p>Description : {{ plat.description }}</p>
+    <p>Prix : {{ plat.prix }} €</p>
+</div>
+
+<form action="{{ path('process_commande', {'id': plat.id}) }}" method="POST">
+    <!-- Ajoutez ici des champs pour la quantité, les options, etc. -->
+    <button type="submit" class="btn btn-primary">Valider la commande</button>
+</form>
+{% endblock %}

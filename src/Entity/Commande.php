@@ -5,8 +5,8 @@ namespace App\Entity;
 use App\Repository\CommandeRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\DBAL\Types\Types;
 
 #[ORM\Entity(repositoryClass: CommandeRepository::class)]
 class Commande
@@ -25,15 +25,16 @@ class Commande
     #[ORM\Column]
     private ?int $etat = null;
 
-    #[ORM\OneToMany(targetEntity: Detail::class, mappedBy: 'commande')]
-    private Collection $details;
+    #[ORM\ManyToMany(targetEntity: Plat::class)]
+    #[ORM\JoinTable(name: "commande_plat")]
+    private Collection $plats;
 
-    #[ORM\ManyToOne(inversedBy: 'commandes')]
+    #[ORM\ManyToOne(targetEntity: Utilisateur::class, inversedBy: 'commandes')]
     private ?Utilisateur $utilisateur = null;
 
     public function __construct()
     {
-        $this->details = new ArrayCollection();
+        $this->plats = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -78,31 +79,25 @@ class Commande
     }
 
     /**
-     * @return Collection<int, Detail>
+     * @return Collection<int, Plat>
      */
-    public function getDetails(): Collection
+    public function getPlats(): Collection
     {
-        return $this->details;
+        return $this->plats;
     }
 
-    public function addDetail(Detail $detail): static
+    public function addPlat(Plat $plat): static
     {
-        if (!$this->details->contains($detail)) {
-            $this->details->add($detail);
-            $detail->setCommande($this);
+        if (!$this->plats->contains($plat)) {
+            $this->plats[] = $plat;
         }
 
         return $this;
     }
 
-    public function removeDetail(Detail $detail): static
+    public function removePlat(Plat $plat): static
     {
-        if ($this->details->removeElement($detail)) {
-            // set the owning side to null (unless already changed)
-            if ($detail->getCommande() === $this) {
-                $detail->setCommande(null);
-            }
-        }
+        $this->plats->removeElement($plat);
 
         return $this;
     }

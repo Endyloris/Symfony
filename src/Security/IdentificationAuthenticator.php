@@ -14,6 +14,7 @@ use Symfony\Component\Security\Http\Authenticator\Passport\Badge\RememberMeBadge
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Credentials\PasswordCredentials;
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
+use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationException;
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
 
 class IdentificationAuthenticator extends AbstractLoginFormAuthenticator
@@ -29,6 +30,12 @@ class IdentificationAuthenticator extends AbstractLoginFormAuthenticator
     public function authenticate(Request $request): Passport
     {
         $email = $request->request->get('email', '');
+
+        // Vérification de la validité de l'email
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            throw new CustomUserMessageAuthenticationException('Invalid email address.');
+        }
+        
 
         $request->getSession()->set(Security::LAST_USERNAME, $email);
 
@@ -48,9 +55,8 @@ class IdentificationAuthenticator extends AbstractLoginFormAuthenticator
             return new RedirectResponse($targetPath);
         }
 
-        // For example:
-        // return new RedirectResponse($this->urlGenerator->generate('some_route'));
-        throw new \Exception('TODO: provide a valid redirect inside '.__FILE__);
+        // Rediriger l'utilisateur vers la page d'accueil du catalogue
+        return new RedirectResponse($this->urlGenerator->generate('catalogue_index'));
     }
 
     protected function getLoginUrl(Request $request): string
